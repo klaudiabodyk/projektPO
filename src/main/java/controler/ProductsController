@@ -1,0 +1,40 @@
+
+import java.util.List;
+
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+
+
+@RestController
+@RequestMapping("/products")
+public class ProductsController {
+
+        @Autowired
+        private DbProductsService productService;
+        @Autowired
+        private ProductsMapper productsMapper;
+
+        @GetMapping( value = "/getProducts")
+        public List<ProductsDto> getProducts() {
+            return productsMapper.mapToProductsDtoList(productService.getAllProducts());
+        }
+
+        @GetMapping(value = "getProduct/{productId}")
+        public ProductsDto get Product(@PathVariable Long productId) throws ProductNotFoundException {
+            return productsMapper.mapTo ProductsDto(productService.getProductsById(productId).orElseThrow(ProductNotFoundException::new));
+        }
+
+        @PostMapping(value = "createProduct", consumes = APPLICATION_JSON_VALUE)
+        public void createProduct(@RequestBody ProductsDto ProductsDto) {
+            productService.saveProducts(productsMapper.mapToProducts(ProductsDto));
+        }
+
+        @PutMapping(value = "updateProduct")
+        public ProductsDto updateProduct(@RequestBody ProductsDto ProductsDto) {
+            return productsMapper.mapToProductsDto(productService.saveProducts(productsMapper.mapToProducts(ProductsDto)));
+        }
+
+        @DeleteMapping(value = "/deleteProduct/{productId}")
+        public void deleteProduct(@PathVariable Long productId) {
+            productService.deleteProductById(productId);
+        }
+}

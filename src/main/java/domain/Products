@@ -1,0 +1,44 @@
+import lombok.*;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Entity(name= "PRODUCTS")
+@Builder
+public class Products  {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID", unique = true, nullable = false)
+    private Long id;
+
+    @Column(name = "PRODUCT_NAME")
+    private String productName;
+
+    @Column(name = "CATEGORY")
+    private Category category;
+
+    @Column(name = "DESCRIPTION")
+    private String description;
+
+    @Column(name = "PRODUCT_PRICE")
+    private BigDecimal productPrice;
+
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "JOIN_ORDERS_PRODUCTS",
+            joinColumns = {@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "_ORDERS_ID", referencedColumnName = "ID")}
+    )
+    private List<Orders> Orders = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "Products")
+    private List<Carts> carts = new ArrayList<>();
+}
+

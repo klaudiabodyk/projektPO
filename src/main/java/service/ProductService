@@ -1,0 +1,28 @@
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class DbProductsService {
+
+    @Autowired
+    private ProductsRepository productsRepository;
+
+    public List<Products> getAllProducts() {
+        return productsRepository.findAll();
+    }
+
+    public Optional<Products> getProductsById(final Long id) {
+        return productsRepository.findById(id);
+    }
+
+    public Products saveProducts(final Products Products) {
+        return productsRepository.save(Products);
+    }
+
+    public void deleteProductById(final Long id) {
+        productsRepository.deleteById(id);
+    }
+}
